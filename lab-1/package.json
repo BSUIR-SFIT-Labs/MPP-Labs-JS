@@ -1,0 +1,41 @@
+{
+  "name": "lab-1",
+  "version": "1.0.0",
+  "description": "first lab on MPP",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "npm run clean && tsc && ts-node ./src/index.ts",
+    "clean": "del-cli dist/**/*.js*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BSUIR-SFIT-Labs/MPP-Labs-JS/lab-1"
+  },
+  "keywords": [
+    "BSUIR",
+    "KSIS",
+    "POIT",
+    "MPP",
+    "MPP-Labs",
+    "Node",
+    "KoaJs"
+  ],
+  "author": "Konstantin Shulga",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.13.1",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.13.1",
+    "@types/koa-logger": "^3.1.1",
+    "@types/koa-router": "^7.4.1",
+    "@types/node": "^14.14.34",
+    "del-cli": "^3.0.1",
+    "nodemon": "^2.0.7",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
+  }
+}
