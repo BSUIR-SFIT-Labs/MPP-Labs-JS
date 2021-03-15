@@ -4,8 +4,9 @@
   "description": "first lab on MPP",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon",
-    "start": "npm run clean && tsc && ts-node ./src/index.ts",
+    "dev": "nodemon -L",
+    "start": "npm run build && ts-node ./src/index.ts",
+    "build": "npm run clean && tsc",
     "clean": "del-cli dist/**/*.js*"
   },
   "repository": {

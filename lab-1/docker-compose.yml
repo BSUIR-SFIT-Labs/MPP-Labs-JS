@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  todo-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: lab-1
+    volumes:
+      - ./src:/home/node/lab-1/src
+      - ./nodemon.json:/home/node/lab-1/nodemon.json
+    expose:
+      - '3000'
+    ports:
+      - '3000:3000'
+    command: npm run dev
