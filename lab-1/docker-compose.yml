@@ -1,17 +1,39 @@
 version: '3.8'
 
 services:
+  mysql-db:
+    image: mysql
+    restart: always
+    env_file: ./.env
+    container_name: lab-1-db
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
+    ports:
+      - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
+    volumes:
+      - db-config:/etc/mysql
+      - db-data:/var/lib/mysql
+
   todo-app:
     build:
       context: .
       dockerfile: Dockerfile
       target: development
-    container_name: lab-1
+    env_file: ./.env
+    container_name: lab-1-app
+    depends_on:
+      - mysql-db
     volumes:
       - ./src:/home/node/lab-1/src
+      - ./dist:/home/node/lab-1/dist
       - ./nodemon.json:/home/node/lab-1/nodemon.json
     expose:
       - '3000'
     ports:
-      - '3000:3000'
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
     command: npm run dev
+
+volumes:
+  db-config:
+  db-data:
