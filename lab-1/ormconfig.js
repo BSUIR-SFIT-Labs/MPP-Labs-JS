@@ -5,10 +5,10 @@ module.exports = {
   username: process.env.MYSQL_USERNAME,
   password: process.env.MYSQL_ROOT_PASSWORD,
   database: process.env.MYSQL_DATABASE,
-  entities: [__dirname + '/dist/infrastructure/persistence/models/*.js'],
-  migrations: ['./dist/infrastructure/persistence/migrations/*.js'],
+  entities: [__dirname + '/dist/common/models/entities/*.js'],
+  migrations: ['./dist/persistence/migrations/*.js'],
   cli: {
-    migrationsDir: './src/infrastructure/persistence/migrations',
+    migrationsDir: './src/persistence/migrations',
   },
   synchronize: false,
   logging: ['schema', 'info', 'error'],

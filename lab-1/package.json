@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "nodemon -L",
     "start": "npm run build && ts-node ./src/index.ts",
-    "build": "npm run clean && tsc",
-    "clean": "del-cli dist/**/*.js*"
+    "build": "npm run clean && npm run copy-views && tsc",
+    "copy-views": "copyfiles -f src/web/views/*.html dist/web/views",
+    "clean": "del-cli dist/**/*.*"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "koa": "^2.13.1",
+    "koa-ejs": "^4.3.0",
     "koa-logger": "^3.2.1",
     "koa-router": "^10.0.0",
     "mysql2": "^2.2.5",
@@ -35,9 +37,11 @@
   },
   "devDependencies": {
     "@types/koa": "^2.13.1",
+    "@types/koa-ejs": "^4.2.2",
     "@types/koa-logger": "^3.1.1",
     "@types/koa-router": "^7.4.1",
     "@types/node": "^14.14.34",
+    "copyfiles": "^2.4.1",
     "del-cli": "^3.0.1",
     "nodemon": "^2.0.7",
     "ts-node": "^9.1.1",

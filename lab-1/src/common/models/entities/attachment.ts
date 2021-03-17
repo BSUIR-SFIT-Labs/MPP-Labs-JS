@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { TodoItem } from './todoItem.model';
+import { TodoItem } from './todoItem';
 
 @Entity({
   name: 'attachments',

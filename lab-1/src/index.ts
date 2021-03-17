@@ -1,24 +1,13 @@
-import * as Koa from 'koa';
-import * as Router from 'koa-router';
+import BaseController from './web/controllers/base.controller';
+import Server from './web/server';
 
-import * as logger from 'koa-logger';
+import todoController from './web/controllers/todo.controller';
 
-const app = new Koa();
-const router = new Router();
+const controllers: BaseController[] = [todoController];
 
-// Hello world
-router.get('/', async (ctx, next) => {
-  ctx.body = { msg: 'Hello world' };
+const server = new Server(controllers);
 
-  await next();
-});
-
-// Middlewares
-app.use(logger());
-
-// Routes
-app.use(router.routes()).use(router.allowedMethods());
-
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
-});
+server
+  .configure()
+  .then(() => server.start())
+  .catch((error) => console.log(error));

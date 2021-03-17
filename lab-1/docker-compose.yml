@@ -1,5 +1,9 @@
 version: '3.8'
 
+networks:
+  todo-app-network:
+    driver: bridge
+
 services:
   mysql-db:
     image: mysql
@@ -7,10 +11,13 @@ services:
     env_file: ./.env
     container_name: lab-1-db
     environment:
+      MYSQL_USER: $MYSQL_USERNAME
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
       MYSQL_DATABASE: $MYSQL_DATABASE
     ports:
       - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
+    networks:
+      - todo-app-network
     volumes:
       - db-config:/etc/mysql
       - db-data:/var/lib/mysql
@@ -32,6 +39,8 @@ services:
       - '3000'
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    networks:
+      - todo-app-network
     command: npm run dev
 
 volumes:
