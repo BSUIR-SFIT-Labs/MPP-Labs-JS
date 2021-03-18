@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddTodoModels1615993893845 implements MigrationInterface {
-  name = 'AddTodoModels1615993893845';
+export class AddTodoModels1616054961851 implements MigrationInterface {
+  name = 'AddTodoModels1616054961851';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -11,7 +11,7 @@ export class AddTodoModels1615993893845 implements MigrationInterface {
       'CREATE TABLE `attachments` (`id` int NOT NULL AUTO_INCREMENT, `path_to_attachment` varchar(4096) NOT NULL, `todoItemId` int NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB',
     );
     await queryRunner.query(
-      'ALTER TABLE `attachments` ADD CONSTRAINT `FK_5574cfcae6b09a3830ab36cc4f7` FOREIGN KEY (`todoItemId`) REFERENCES `todo_items`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION',
+      'ALTER TABLE `attachments` ADD CONSTRAINT `FK_5574cfcae6b09a3830ab36cc4f7` FOREIGN KEY (`todoItemId`) REFERENCES `todo_items`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION',
     );
   }
 

@@ -14,6 +14,8 @@ export class Attachment {
   })
   pathToAttachment: string;
 
-  @ManyToOne(() => TodoItem, (todoItem) => todoItem.attachments)
+  @ManyToOne(() => TodoItem, (todoItem) => todoItem.attachments, {
+    onDelete: 'CASCADE',
+  })
   todoItem: TodoItem;
 }
