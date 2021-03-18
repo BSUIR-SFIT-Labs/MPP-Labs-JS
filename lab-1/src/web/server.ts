@@ -1,6 +1,7 @@
 import * as Koa from 'koa';
 
 import * as logger from 'koa-logger';
+import * as bodyParser from 'koa-bodyparser';
 import configureDatabaseConnection from '../persistence/dbConfig';
 import BaseController from './controllers/base.controller';
 
@@ -25,6 +26,7 @@ export default class Server {
 
     // Middlewares
     this.app.use(logger());
+    this.app.use(bodyParser());
 
     // Controllers
     this.loadControllers();
