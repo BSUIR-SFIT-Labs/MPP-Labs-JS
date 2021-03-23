@@ -2,6 +2,7 @@ import * as Koa from 'koa';
 
 import * as logger from 'koa-logger';
 import * as bodyParser from 'koa-bodyparser';
+import * as render from 'koa-ejs';
 import configureDatabaseConnection from '../persistence/dbConfig';
 import BaseController from './controllers/base.controller';
 
@@ -27,6 +28,14 @@ export default class Server {
     // Middlewares
     this.app.use(logger());
     this.app.use(bodyParser());
+
+    render(this.app, {
+      root: __dirname + '/views',
+      layout: 'layout',
+      viewExt: 'html',
+      cache: false,
+      debug: false,
+    });
 
     // Controllers
     this.loadControllers();
