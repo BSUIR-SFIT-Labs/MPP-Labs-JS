@@ -19,11 +19,13 @@ export class TodoItem {
   @Column({
     name: 'description',
     length: 255,
+    nullable: true,
   })
   description: string;
 
   @Column({
     name: 'due_date',
+    nullable: true,
   })
   dueDate: Date;
 

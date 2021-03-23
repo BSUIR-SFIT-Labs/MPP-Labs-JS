@@ -16,11 +16,11 @@ class TodoController extends BaseController {
     this.router.get('/get', this.getAllTodoItems);
     this.router.post('/create', this.createTodoItem);
     this.router.post('/update', this.updateTodoItem);
-    this.router.delete('/delete', this.deleteTodoItem);
+    this.router.post('/delete', this.deleteTodoItem);
 
     this.router.post('/change-status', this.changeTodoItemStatus);
     this.router.post('/add-attachment', this.addAttachment);
-    this.router.delete('/remove-attachment', this.removeAttachment);
+    this.router.post('/remove-attachment', this.removeAttachment);
   }
 
   getAllTodoItems = async (context: Context): Promise<void> => {
@@ -48,6 +48,7 @@ class TodoController extends BaseController {
     });
 
     context.status = 200;
+    context.redirect('/');
   };
 
   updateTodoItem = async (context: Context): Promise<void> => {
@@ -65,12 +66,14 @@ class TodoController extends BaseController {
     await this.todoService.deleteTodoItem(context.request.body.id);
 
     context.status = 200;
+    context.redirect('/');
   };
 
   changeTodoItemStatus = async (context: Context): Promise<void> => {
     await this.todoService.changeTodoItemStatus(context.request.body.id);
 
     context.status = 200;
+    context.redirect('/');
   };
 
   addAttachment = async (context: Context): Promise<void> => {
@@ -80,12 +83,14 @@ class TodoController extends BaseController {
     );
 
     context.status = 200;
+    context.redirect('/');
   };
 
   removeAttachment = async (context: Context): Promise<void> => {
     await this.todoService.removeAttachment(context.request.body.id);
 
     context.status = 200;
+    context.redirect('/');
   };
 }
 

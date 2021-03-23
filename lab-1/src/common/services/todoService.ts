@@ -24,12 +24,14 @@ export default class TodoService {
 
     await getConnection().manager.save(todoItem);
 
-    for (const pathToAttachment of todoItemRequestDto.pathsToAttachments) {
-      const attachment = new Attachment();
-      attachment.pathToAttachment = pathToAttachment;
-      attachment.todoItem = todoItem;
+    if (todoItemRequestDto.pathsToAttachments) {
+      for (const pathToAttachment of todoItemRequestDto.pathsToAttachments) {
+        const attachment = new Attachment();
+        attachment.pathToAttachment = pathToAttachment;
+        attachment.todoItem = todoItem;
 
-      await getConnection().manager.save(attachment);
+        await getConnection().manager.save(attachment);
+      }
     }
   }
 
