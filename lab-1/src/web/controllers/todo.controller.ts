@@ -59,7 +59,13 @@ class TodoController extends BaseController {
       context.request.body.dueDate,
     );
 
+    console.log(context.request.body.id);
+    console.log(context.request.body.title);
+    console.log(context.request.body.description);
+    console.log(context.request.body.dueDate);
+
     context.status = 200;
+    context.redirect('/');
   };
 
   deleteTodoItem = async (context: Context): Promise<void> => {

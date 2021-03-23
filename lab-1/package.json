@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "nodemon -L",
     "start": "npm run build && ts-node ./src/index.ts",
-    "build": "npm run clean && npm run copy-views && tsc",
+    "build": "npm run clean && npm run copy-views && npm run copy-css && npm run copy-js && tsc",
     "copy-views": "copyfiles -f src/web/views/*.html dist/web/views",
+    "copy-css": "copyfiles -f src/web/static/css/*.css dist/web/static/css",
+    "copy-js": "copyfiles -f src/web/static/js/*.js dist/web/static/js",
     "clean": "del-cli dist/**/*.*"
   },
   "repository": {
@@ -32,6 +34,7 @@
     "koa-ejs": "^4.3.0",
     "koa-logger": "^3.2.1",
     "koa-router": "^10.0.0",
+    "koa-static": "^5.0.0",
     "mysql2": "^2.2.5",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.31"

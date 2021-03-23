@@ -10,30 +10,31 @@
   <div class="card mb-3">
     <div class="card-body">
       <form action="/change-status" method="POST">
-        <div class="form-check" style="float: left;">
+        <div class="form-check float-left" id="change-status-form">
           <input hidden name="id" value="<%= todoItem.id %>"/>
           <input
             type="checkbox"
-            class="form-check-input"
-            style="cursor: pointer"
+            class="form-check-input cursor-pointer"
             onchange="document.getElementById('cs<%= todoItem.id %>').click();"
             <%= todoItem.isDone ? 'checked' : '' %>
           />
           <button type="submit" hidden id="cs<%= todoItem.id %>"></button>
           <label
-            class="form-check-label ml-3"
-            for="exampleCheck1"
+            class="form-check-label ml-3 cursor-pointer <%= todoItem.isDone ? 'line-through' : '' %>"
             data-toggle="modal"
-            data-target="#exampleModal"
-            style="cursor: pointer; <%= todoItem.isDone ? 'text-decoration: line-through' : '' %>"
+            data-target="#editModal"
+            data-id="<%= todoItem.id %>"
+            data-title="<%= todoItem.title %>"
+            data-description="<%= todoItem.description %>"
+            data-duedate="<%= todoItem.dueDate %>"
             ><%= todoItem.title %></label
           >
         </div>
       </form>
-      <form action="/delete" method="POST" style="float: right;">
+      <form action="/delete" method="POST" class="float-right">
         <input hidden name="id" value="<%= todoItem.id %>"/>
-        <button type="submit" style="    border: none; outline: none; background: transparent;">
-          <i class="fas fa-trash-alt" style="color: red; cursor: pointer;"></i>
+        <button type="submit" class="btn-transparent">
+          <i class="fas fa-trash-alt bucket"></i>
         </button>
       </form>
     </div>
@@ -41,28 +42,43 @@
   <% }); %>
 </div>
 
-<!-- Modal -->
 <div
   class="modal fade"
-  id="exampleModal"
+  id="editModal"
   tabindex="-1"
   role="dialog"
-  aria-labelledby="exampleModalLabel"
+  aria-labelledby="modalLabel"
   aria-hidden="true"
 >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="modalLabel">Edit</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">...</div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+      <form action="/update" method="POST">
+        <div class="modal-body">
+          <input hidden name="id" id="id"/>
+          <div class="mb-3">
+            <label for="title" class="col-form-label">Title:</label>
+            <input type="text" class="form-control" id="title" name="title">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="col-form-label">Description:</label>
+            <textarea class="form-control" id="description" name="description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="due-date" class="col-form-label">Due date:</label>
+            <input type="datetime-local" id="due-date" name="dueDate" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
