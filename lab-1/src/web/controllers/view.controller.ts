@@ -16,7 +16,12 @@ class ViewController extends BaseController {
   }
 
   renderHomePage = async (context: Context): Promise<void> => {
-    const todoItems = await this.todoService.getAllTodoItems();
+    const params = context.request.query;
+
+    const todoItems = await this.todoService.getAllTodoItems(
+      params.sortingElement as string,
+      params.sortingOrder as string,
+    );
 
     const t = [];
     for (const todoItem of todoItems) {

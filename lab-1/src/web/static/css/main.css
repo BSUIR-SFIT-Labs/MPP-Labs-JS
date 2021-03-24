@@ -108,3 +108,7 @@
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
 }
+
+#no-todo-label {
+  display: table;
+}
