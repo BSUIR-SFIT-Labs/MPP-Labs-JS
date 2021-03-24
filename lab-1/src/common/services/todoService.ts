@@ -1,4 +1,6 @@
 import { getConnection } from 'typeorm';
+import { unlink } from 'fs/promises';
+import * as path from 'path';
 import { Attachment } from '../models/entities/attachment';
 import { TodoItem } from '../models/entities/todoItem';
 import TodoItemRequestDto from '../models/requests/todoItemRequestDto';
@@ -50,6 +52,19 @@ export default class TodoService {
   }
 
   public async deleteTodoItem(id: number): Promise<void> {
+    const attachmentsToDelete = await getConnection()
+      .getRepository(Attachment)
+      .createQueryBuilder('attachments')
+      .where('attachments.todoItemId = :id', { id: id })
+      .getMany();
+
+    const filenames = [];
+    for (const attachmentToDelete of attachmentsToDelete) {
+      filenames.push(attachmentToDelete.pathToAttachment.split('/').reverse()[0]);
+    }
+
+    this.deleteFiles(filenames);
+
     await getConnection().getRepository(TodoItem).delete(id);
   }
 
@@ -82,8 +97,17 @@ export default class TodoService {
     await getConnection().manager.save(attachment);
   }
 
-  public async removeAttachment(id: number): Promise<void> {
+  public async removeAttachment(id: number, fileName: string): Promise<void> {
+    this.deleteFiles([fileName]);
+
     await getConnection().getRepository(Attachment).delete(id);
+  }
+
+  private async deleteFiles(fileNames: string[]): Promise<void> {
+    for (const fileName of fileNames) {
+      const pathToFile = path.join(__dirname, '../../web/static/uploads/', fileName);
+      await unlink(pathToFile);
+    }
   }
 
   private sortTodoItems(

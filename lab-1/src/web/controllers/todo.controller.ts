@@ -1,4 +1,6 @@
 import { Context } from 'koa';
+import * as path from 'path';
+import * as koaBody from 'koa-body';
 import TodoService from '../../common/services/todoService';
 import BaseController from './base.controller';
 
@@ -19,7 +21,17 @@ class TodoController extends BaseController {
     this.router.post('/delete', this.deleteTodoItem);
 
     this.router.post('/change-status', this.changeTodoItemStatus);
-    this.router.post('/add-attachment', this.addAttachment);
+    this.router.post(
+      '/add-attachment',
+      koaBody({
+        multipart: true,
+        formidable: {
+          uploadDir: path.join(__dirname, '../static/uploads'),
+          keepExtensions: true,
+        },
+      }),
+      this.addAttachment,
+    );
     this.router.post('/remove-attachment', this.removeAttachment);
   }
 
@@ -42,9 +54,6 @@ class TodoController extends BaseController {
   createTodoItem = async (context: Context): Promise<void> => {
     await this.todoService.createNewTodoItem({
       title: context.request.body.title,
-      description: context.request.body.description,
-      dueDate: context.request.body.dueDate,
-      pathsToAttachments: context.request.body.pathsToAttachments,
     });
 
     context.status = 200;
@@ -58,11 +67,6 @@ class TodoController extends BaseController {
       context.request.body.description,
       context.request.body.dueDate,
     );
-
-    console.log(context.request.body.id);
-    console.log(context.request.body.title);
-    console.log(context.request.body.description);
-    console.log(context.request.body.dueDate);
 
     context.status = 200;
     context.redirect('/');
@@ -83,17 +87,18 @@ class TodoController extends BaseController {
   };
 
   addAttachment = async (context: Context): Promise<void> => {
-    await this.todoService.addAttachment(
-      context.request.body.todoItemId,
-      context.request.body.pathToAttachment,
-    );
+    const file: any = context.request.files.file;
+    const basename = path.basename(file.path);
+    const pathToAttachment = `${context.origin}/uploads/${basename}`;
+
+    await this.todoService.addAttachment(context.request.body.todoItemId, pathToAttachment);
 
     context.status = 200;
     context.redirect('/');
   };
 
   removeAttachment = async (context: Context): Promise<void> => {
-    await this.todoService.removeAttachment(context.request.body.id);
+    await this.todoService.removeAttachment(context.request.body.id, context.request.body.fileName);
 
     context.status = 200;
     context.redirect('/');

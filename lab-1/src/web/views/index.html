@@ -11,14 +11,14 @@
     <div class="card-body">
       <form action="/change-status" method="POST">
         <div class="form-check float-left" id="change-status-form">
-          <input hidden name="id" value="<%= todoItem.id %>"/>
+          <input name="id" class="display-none" value="<%= todoItem.id %>"/>
           <input
             type="checkbox"
             class="form-check-input cursor-pointer"
             onchange="document.getElementById('cs<%= todoItem.id %>').click();"
             <%= todoItem.isDone ? 'checked' : '' %>
           />
-          <button type="submit" hidden id="cs<%= todoItem.id %>"></button>
+          <button type="submit" id="cs<%= todoItem.id %>" class="display-none"></button>
           <label
             class="form-check-label ml-3 cursor-pointer <%= todoItem.isDone ? 'line-through' : '' %>"
             data-toggle="modal"
@@ -27,12 +27,13 @@
             data-title="<%= todoItem.title %>"
             data-description="<%= todoItem.description %>"
             data-duedate="<%= todoItem.dueDate %>"
+            data-attachments="<%= todoItem.attachments %>"
             ><%= todoItem.title %></label
           >
         </div>
       </form>
       <form action="/delete" method="POST" class="float-right">
-        <input hidden name="id" value="<%= todoItem.id %>"/>
+        <input name="id" value="<%= todoItem.id %>" class="display-none"/>
         <button type="submit" class="btn-transparent">
           <i class="fas fa-trash-alt bucket"></i>
         </button>
@@ -50,35 +51,66 @@
   aria-labelledby="modalLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalLabel">Edit</h5>
+        <h5 class="modal-title to-upper" id="modalLabel">Task details</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="/update" method="POST">
-        <div class="modal-body">
-          <input hidden name="id" id="id"/>
-          <div class="mb-3">
-            <label for="title" class="col-form-label">Title:</label>
-            <input type="text" class="form-control" id="title" name="title">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8">
+            <form action="/update" method="POST">
+              <div class="modal-body">
+                <input name="id" id="id" class="display-none"/>
+                <div class="mb-3">
+                  <label for="title" class="col-form-label to-upper fs-small">Title:</label>
+                  <input type="text" class="form-control" id="title" name="title">
+                </div>
+                <div class="mb-3">
+                  <label for="description" class="col-form-label to-upper fs-small">Description:</label>
+                  <textarea class="form-control" id="description" name="description"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="due-date" class="col-form-label to-upper fs-small">Due date:</label>
+                  <input type="datetime-local" id="due-date" name="dueDate" />
+                </div>
+                <div class="mb-3" id="attachment-body">
+                  <label class="col-form-label to-upper fs-small" id="attachments-header">Attachments:</label>
+                  <div id="attachments">
+                    
+                  </div> 
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary to-upper fs-small btn-modal" data-dismiss="modal">
+                  Close
+                </button>
+                <button type="submit" class="btn btn-primary to-upper fs-small btn-modal">
+                  Edit
+                </button>
+              </div>
+            </form>
           </div>
-          <div class="mb-3">
-            <label for="description" class="col-form-label">Description:</label>
-            <textarea class="form-control" id="description" name="description"></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="due-date" class="col-form-label">Due date:</label>
-            <input type="datetime-local" id="due-date" name="dueDate" />
+          <div class="col-md-4">
+            <div class="modal-body">
+              <label class="col-form-label to-upper fs-small">Add to card</label>
+              <div class="mb-3">
+                <form action="/add-attachment" method="POST" enctype="multipart/form-data">
+                  <label for="file-upload" class="custom-file-upload cursor-pointer fs-small to-upper">
+                    Attachment
+                  </label>
+                  <input id="todo-item-id" class="display-none" name="todoItemId" />
+                  <input id="file-upload" class="display-none" type="file" name="file" onchange="document.getElementById('btn-attach').click();false;" />
+                  <input type="submit" id="btn-attach" class="display-none" />
+                </form>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save changes</button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>

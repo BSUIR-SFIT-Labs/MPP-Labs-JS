@@ -6,7 +6,6 @@ import * as staticFiles from 'koa-static';
 import * as render from 'koa-ejs';
 import configureDatabaseConnection from '../persistence/dbConfig';
 import BaseController from './controllers/base.controller';
-import { cwd } from 'node:process';
 
 export default class Server {
   private readonly app: Koa;

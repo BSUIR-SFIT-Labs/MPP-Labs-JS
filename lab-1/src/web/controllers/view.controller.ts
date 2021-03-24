@@ -18,8 +18,27 @@ class ViewController extends BaseController {
   renderHomePage = async (context: Context): Promise<void> => {
     const todoItems = await this.todoService.getAllTodoItems();
 
+    const t = [];
+    for (const todoItem of todoItems) {
+      const a = [];
+      for (const attachment of todoItem.attachments) {
+        a.push(attachment.id + '|' + attachment.pathToAttachment);
+      }
+
+      t.push({
+        id: todoItem.id,
+        title: todoItem.title,
+        description: todoItem.description,
+        dueDate: todoItem.dueDate,
+        isDone: todoItem.isDone,
+        attachments: a,
+      });
+    }
+
+    console.log(t);
+
     await context.render('index', {
-      todoItems: todoItems,
+      todoItems: t,
     });
   };
 }
