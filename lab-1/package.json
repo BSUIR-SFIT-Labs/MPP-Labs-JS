@@ -1,0 +1,60 @@
+{
+  "name": "lab-1",
+  "version": "1.0.0",
+  "description": "first lab on MPP",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "nodemon -L",
+    "start": "npm run build && ts-node ./src/index.ts",
+    "build": "npm run clean && npm run copy-views && npm run copy-css && npm run copy-js && npm run copy-uploads && tsc",
+    "copy-views": "copyfiles -f src/web/views/*.html dist/web/views",
+    "copy-css": "copyfiles -f src/web/static/css/*.css dist/web/static/css",
+    "copy-js": "copyfiles -f src/web/static/js/*.js dist/web/static/js",
+    "copy-uploads": "copyfiles -f src/web/static/uploads/*.* dist/web/static/uploads",
+    "clean": "del-cli dist/**/*.*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BSUIR-SFIT-Labs/MPP-Labs-JS/lab-1"
+  },
+  "keywords": [
+    "BSUIR",
+    "KSIS",
+    "POIT",
+    "MPP",
+    "MPP-Labs",
+    "Node",
+    "KoaJs"
+  ],
+  "author": "Konstantin Shulga",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "fs": "0.0.1-security",
+    "koa": "^2.13.1",
+    "koa-body": "^4.2.0",
+    "koa-bodyparser": "^4.3.0",
+    "koa-ejs": "^4.3.0",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^10.0.0",
+    "koa-static": "^5.0.0",
+    "mysql2": "^2.2.5",
+    "path": "^0.12.7",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.31"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.13.1",
+    "@types/koa-bodyparser": "^4.3.0",
+    "@types/koa-ejs": "^4.2.2",
+    "@types/koa-logger": "^3.1.1",
+    "@types/koa-router": "^7.4.1",
+    "@types/koa-static": "^4.0.1",
+    "@types/node": "^14.14.34",
+    "copyfiles": "^2.4.1",
+    "del-cli": "^3.0.1",
+    "nodemon": "^2.0.7",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
+  }
+}

@@ -1,0 +1,134 @@
+<form class="col-10 mx-auto mt-5" action="/create" method="POST">
+  <div class="input-group">
+    <input type="text" class="form-control rounded-0" placeholder="New task" name="title" />
+    <span><button type="submit" class="btn btn-primary rounded-0">Add task</button></span>
+  </div>
+</form>
+
+<% if (todoItems.length > 0) { %>
+<div class="col-10 mx-auto mt-5">
+  <div class="card mb-3 width-max">
+    <div class="card-body">
+      <label class="mb-0 mr-2">Due date: </label>
+      <a href="/?sortingElement=DUE_DATE&sortingOrder=ASC"><i class="fas fa-arrow-up"></i></a>
+      <a href="/?sortingElement=DUE_DATE&sortingOrder=DESC"><i class="fas fa-arrow-down"></i></a>
+      <label class="mb-0 ml-5 mr-2">Status: </label>
+      <a href="/?sortingElement=STATUS&sortingOrder=DESC"><i class="fas fa-arrow-up"></i></a>
+      <a href="/?sortingElement=STATUS&sortingOrder=ASC"><i class="fas fa-arrow-down"></i></a>
+    </div>
+  </div>  
+
+  <% todoItems.forEach(todoItem => { %>
+  <div class="card mb-3">
+    <div class="card-body">
+      <form action="/change-status" method="POST">
+        <div class="form-check float-left" id="change-status-form">
+          <input name="id" class="display-none" value="<%= todoItem.id %>"/>
+          <input
+            type="checkbox"
+            class="form-check-input cursor-pointer"
+            onchange="document.getElementById('cs<%= todoItem.id %>').click();"
+            <%= todoItem.isDone ? 'checked' : '' %>
+          />
+          <button type="submit" id="cs<%= todoItem.id %>" class="display-none"></button>
+          <label
+            class="form-check-label ml-3 cursor-pointer <%= todoItem.isDone ? 'line-through' : '' %>"
+            data-toggle="modal"
+            data-target="#editModal"
+            data-id="<%= todoItem.id %>"
+            data-title="<%= todoItem.title %>"
+            data-description="<%= todoItem.description %>"
+            data-duedate="<%= todoItem.dueDate %>"
+            data-attachments="<%= todoItem.attachments %>"
+            ><%= todoItem.title %></label
+          >
+        </div>
+      </form>
+      <form action="/delete" method="POST" class="float-right">
+        <input name="id" value="<%= todoItem.id %>" class="display-none"/>
+        <button type="submit" class="btn-transparent">
+          <i class="fas fa-trash-alt bucket"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+  <% }); %>
+</div>
+
+<div
+  class="modal fade"
+  id="editModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title to-upper" id="modalLabel">Task details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8">
+            <form action="/update" method="POST">
+              <div class="modal-body">
+                <input name="id" id="id" class="display-none"/>
+                <div class="mb-3">
+                  <label for="title" class="col-form-label to-upper fs-small">Title:</label>
+                  <input type="text" class="form-control" id="title" name="title">
+                </div>
+                <div class="mb-3">
+                  <label for="description" class="col-form-label to-upper fs-small">Description:</label>
+                  <textarea class="form-control" id="description" name="description"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="due-date" class="col-form-label to-upper fs-small">Due date:</label>
+                  <input type="datetime-local" id="due-date" name="dueDate" />
+                </div>
+                <div class="mb-3" id="attachment-body">
+                  <label class="col-form-label to-upper fs-small" id="attachments-header">Attachments:</label>
+                  <div id="attachments">
+                    
+                  </div> 
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary to-upper fs-small btn-modal" data-dismiss="modal">
+                  Close
+                </button>
+                <button type="submit" class="btn btn-primary to-upper fs-small btn-modal">
+                  Edit
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="col-md-4">
+            <div class="modal-body">
+              <label class="col-form-label to-upper fs-small">Add to card</label>
+              <div class="mb-3">
+                <form action="/add-attachment" method="POST" enctype="multipart/form-data">
+                  <label for="file-upload" class="custom-file-upload cursor-pointer fs-small to-upper">
+                    Attachment
+                  </label>
+                  <input id="todo-item-id" class="display-none" name="todoItemId" />
+                  <input id="file-upload" class="display-none" type="file" name="file" onchange="document.getElementById('btn-attach').click();false;" />
+                  <input type="submit" id="btn-attach" class="display-none" />
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% } else { %>
+  <div class="col-10 mx-auto mt-5">
+    <label class="col-form-label to-upper fs-small mx-auto" id="no-todo-label">No items yet! Add one above!</label>
+  </div>
+<% } %>  
