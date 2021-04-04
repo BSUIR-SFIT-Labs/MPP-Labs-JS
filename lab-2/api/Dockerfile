@@ -1,6 +1,6 @@
 FROM node:14 as development
 
-WORKDIR /home/node/lab-2
+WORKDIR /home/node/lab-2/api
 
 COPY package.json .
 

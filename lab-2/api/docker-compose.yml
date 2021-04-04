@@ -28,13 +28,13 @@ services:
       dockerfile: Dockerfile
       target: development
     env_file: ./.env
-    container_name: lab-2-app
+    container_name: lab-2-app-api
     depends_on:
       - mysql-db
     volumes:
-      - ./src:/home/node/lab-2/src
-      - ./dist:/home/node/lab-2/dist
-      - ./nodemon.json:/home/node/lab-2/nodemon.json
+      - ./src:/home/node/lab-2/api/src
+      - ./dist:/home/node/lab-2/api/dist
+      - ./nodemon.json:/home/node/lab-2/api/nodemon.json
     expose:
       - '3000'
     ports:
