@@ -3,6 +3,7 @@ import * as Koa from 'koa';
 import * as logger from 'koa-logger';
 import * as bodyParser from 'koa-bodyparser';
 import * as staticFiles from 'koa-static';
+import * as cors from '@koa/cors';
 import configureDatabaseConnection from '../persistence/dbConfig';
 import BaseController from './controllers/base.controller';
 
@@ -26,6 +27,7 @@ export default class Server {
     await configureDatabaseConnection();
 
     // Middlewares
+    this.app.use(cors());
     this.app.use(logger());
     this.app.use(bodyParser());
     this.app.use(staticFiles(__dirname + '/static'));

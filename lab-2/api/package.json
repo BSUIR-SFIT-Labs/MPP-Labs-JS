@@ -29,6 +29,7 @@
   "author": "Konstantin Shulga",
   "license": "MIT",
   "dependencies": {
+    "@koa/cors": "^3.1.0",
     "dotenv": "^8.2.0",
     "fs": "0.0.1-security",
     "koa": "^2.13.1",
