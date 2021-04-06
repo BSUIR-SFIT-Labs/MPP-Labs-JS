@@ -1,0 +1,90 @@
+<div class="modal-header">
+  <h4 class="modal-title to-upper" id="modalLabel">Task details</h4>
+  <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="mb-3">
+          <label for="title" class="col-form-label to-upper fs-small"
+            >Title:</label
+          >
+          <input type="text" class="form-control" [(ngModel)]="todoTitle" />
+        </div>
+        <div class="mb-3">
+          <label for="description" class="col-form-label to-upper fs-small"
+            >Description:</label
+          >
+          <textarea
+            class="form-control"
+            [(ngModel)]="todoDescription"
+          ></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="due-date" class="col-form-label to-upper fs-small"
+            >Due date:</label
+          >
+          <input
+            type="datetime-local"
+            id="due-date"
+            [(ngModel)]="todoDueDate"
+          />
+        </div>
+        <div class="mb-3" id="attachment-body" *ngIf="attachments.length > 0">
+          <label class="col-form-label to-upper fs-small">Attachments:</label>
+          <div class="attachments">
+            <div class="card mb-3" *ngFor="let attachment of attachments">
+              <div class="card-body">
+                <a href="{{ attachment.pathToAttachment }}">Download file</a>
+                <button
+                  class="btn-transparent float-right"
+                  (click)="removeAttachment(attachment.id)"
+                >
+                  <i class="fas fa-trash-alt bucket"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <label class="col-form-label to-upper fs-small">Add to card</label>
+        <div class="mb-3">
+          <label
+            for="file-upload"
+            class="custom-file-upload cursor-pointer fs-small to-upper"
+          >
+            Attachment
+          </label>
+          <input
+            id="file-upload"
+            class="display-none"
+            type="file"
+            (change)="addAttachment($event)"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="editTodoItem()">
+      Edit
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="activeModal.close('Close click')"
+    >
+      Close
+    </button>
+  </div>
+</div>
