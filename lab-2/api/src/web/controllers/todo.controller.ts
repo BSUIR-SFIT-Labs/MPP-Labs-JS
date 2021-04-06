@@ -19,8 +19,9 @@ class TodoController extends BaseController {
     this.router.post('/create', this.createTodoItem);
     this.router.put('/update/:id', this.updateTodoItem);
     this.router.delete('/delete/:id', this.deleteTodoItem);
-
     this.router.put('/change-status/:id', this.changeTodoItemStatus);
+
+    this.router.get('/get-attachments/:todoItemId', this.getAttachments);
     this.router.put(
       '/add-attachment/:todoItemId',
       koaBody({
@@ -48,13 +49,8 @@ class TodoController extends BaseController {
 
       const todoItems = await this.todoService.getAllTodoItems(sortingElement, sortingOrder);
 
-      if (todoItems.length != 0) {
-        context.status = 200;
-        context.body = todoItems;
-      } else {
-        context.status = 404;
-        context.body = '';
-      }
+      context.status = 200;
+      context.body = todoItems;
     } catch {
       context.status = 500;
       context.body = '';
@@ -67,6 +63,7 @@ class TodoController extends BaseController {
         title: context.request.body.title,
       });
       context.status = 200;
+      context.body = '';
     } catch {
       context.status = 500;
       context.body = '';
@@ -83,6 +80,7 @@ class TodoController extends BaseController {
           context.request.body.dueDate,
         );
         context.status = 200;
+        context.body = '';
       } else {
         context.status = 404;
         context.body = '';
@@ -98,6 +96,7 @@ class TodoController extends BaseController {
       if (await this.todoService.isTodoItemExist(context.params.id)) {
         await this.todoService.deleteTodoItem(context.params.id);
         context.status = 200;
+        context.body = '';
       } else {
         context.status = 404;
         context.body = '';
@@ -113,10 +112,22 @@ class TodoController extends BaseController {
       if (await this.todoService.isTodoItemExist(context.params.id)) {
         await this.todoService.changeTodoItemStatus(context.params.id);
         context.status = 200;
+        context.body = '';
       } else {
         context.status = 404;
         context.body = '';
       }
+    } catch {
+      context.status = 500;
+      context.body = '';
+    }
+  };
+
+  getAttachments = async (context: Context): Promise<void> => {
+    try {
+      const attachments = await this.todoService.getAttachments(context.params.todoItemId);
+      context.status = 200;
+      context.body = attachments;
     } catch {
       context.status = 500;
       context.body = '';
@@ -132,6 +143,7 @@ class TodoController extends BaseController {
 
         await this.todoService.addAttachment(context.params.todoItemId, pathToAttachment);
         context.status = 200;
+        context.body = '';
       } else {
         context.status = 404;
         context.body = '';
@@ -145,8 +157,11 @@ class TodoController extends BaseController {
   removeAttachment = async (context: Context): Promise<void> => {
     try {
       if (await this.todoService.isAttachmentExist(context.params.id)) {
-        await this.todoService.removeAttachment(context.params.id, context.request.body.fileName);
+        const fileName = context.request.query.fileName.toString();
+
+        await this.todoService.removeAttachment(context.params.id, fileName);
         context.status = 200;
+        context.body = '';
       } else {
         context.status = 404;
         context.body = '';

@@ -83,6 +83,14 @@ export default class TodoService {
       .execute();
   }
 
+  public async getAttachments(todoItemId: number): Promise<Attachment[]> {
+    return await getConnection()
+      .getRepository(Attachment)
+      .createQueryBuilder('attachments')
+      .where('attachments.todoItemId = :todoItemId', { todoItemId: todoItemId })
+      .getMany();
+  }
+
   public async addAttachment(todoItemId: number, pathToAttachment: string): Promise<void> {
     const todoItem = await getConnection()
       .getRepository(TodoItem)
