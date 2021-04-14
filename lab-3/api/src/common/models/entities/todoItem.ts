@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Attachment } from './attachment';
+import { User } from './user';
 
 @Entity({
   name: 'todo_items',
@@ -36,4 +37,8 @@ export class TodoItem {
 
   @OneToMany(() => Attachment, (attachment) => attachment.todoItem)
   attachments: Attachment[];
+
+  @OneToOne(() => User)
+  @JoinColumn()
+  user: User;
 }
