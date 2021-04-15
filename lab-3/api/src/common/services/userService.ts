@@ -28,4 +28,10 @@ export default class UserService {
       .where('users.email = :email', { email: email })
       .getOne();
   }
+
+  public async isUserExist(email: string): Promise<boolean> {
+    const user = await this.getUserByEmail(email);
+
+    return user ? true : false;
+  }
 }
