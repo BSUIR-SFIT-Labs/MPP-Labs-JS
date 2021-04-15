@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcryptjs';
+import * as jwt from 'jsonwebtoken';
 import { getConnection, getRepository } from 'typeorm';
 
 import { User } from '../models/entities/user';
@@ -33,5 +34,28 @@ export default class UserService {
     const user = await this.getUserByEmail(email);
 
     return user ? true : false;
+  }
+
+  public async login(email: string, password: string): Promise<string> {
+    const user = await this.getUserByEmail(email);
+
+    if (user) {
+      const isCorrectPassword = bcrypt.compareSync(password, user.passwordHash);
+
+      if (isCorrectPassword) {
+        const jwtToken = jwt.sign(
+          {
+            id: user.id,
+            email: user.email,
+          },
+          'fcfe7f47-193e-41d8-814d-3c5985ee2832',
+          { expiresIn: 60 * 60 * 24 },
+        );
+
+        return `Bearer ${jwtToken}`;
+      }
+    }
+
+    return '';
   }
 }

@@ -14,15 +14,13 @@ class UserController extends BaseController {
 
   private InitializeRoutes() {
     this.router.post('/user/create', this.createUser);
+    this.router.post('/user/login', this.login);
   }
 
   createUser = async (context: Context): Promise<void> => {
     try {
       const email = context.request.body.email;
       const password = context.request.body.password;
-
-      console.log('LOG: ', email);
-      console.log('LOG: ', password);
 
       if (this.userService.isUserExist(email)) {
         await this.userService.createNewUser(email, password);
@@ -31,6 +29,26 @@ class UserController extends BaseController {
       } else {
         context.status = 400;
         context.body = { 'message: ': `User with email ${email} already exists!` };
+      }
+    } catch {
+      context.status = 500;
+      context.body = '';
+    }
+  };
+
+  login = async (context: Context): Promise<void> => {
+    try {
+      const email = context.request.body.email;
+      const password = context.request.body.password;
+
+      const token = await this.userService.login(email, password);
+
+      if (token) {
+        context.status = 200;
+        context.body = { 'token: ': token };
+      } else {
+        context.status = 401;
+        context.body = { 'message: ': 'email or password incorrect!' };
       }
     } catch {
       context.status = 500;
