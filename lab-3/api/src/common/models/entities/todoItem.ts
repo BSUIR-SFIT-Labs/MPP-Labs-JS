@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Attachment } from './attachment';
 import { User } from './user';
 
@@ -38,7 +38,8 @@ export class TodoItem {
   @OneToMany(() => Attachment, (attachment) => attachment.todoItem)
   attachments: Attachment[];
 
-  @OneToOne(() => User)
-  @JoinColumn()
+  @ManyToOne(() => User, (user) => user.todoItems, {
+    onDelete: 'CASCADE',
+  })
   user: User;
 }
