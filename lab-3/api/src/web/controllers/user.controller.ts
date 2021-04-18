@@ -22,7 +22,7 @@ class UserController extends BaseController {
       const email = context.request.body.email;
       const password = context.request.body.password;
 
-      if (this.userService.isUserExist(email)) {
+      if (!(await this.userService.isUserExist(email))) {
         await this.userService.createNewUser(email, password);
         context.status = 200;
         context.body = '';

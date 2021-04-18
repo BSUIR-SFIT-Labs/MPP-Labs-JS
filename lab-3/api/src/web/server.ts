@@ -4,6 +4,7 @@ import * as logger from 'koa-logger';
 import * as bodyParser from 'koa-bodyparser';
 import * as staticFiles from 'koa-static';
 import * as cors from '@koa/cors';
+import * as jwt from 'koa-jwt';
 import configureDatabaseConnection from '../persistence/dbConfig';
 import BaseController from './controllers/base.controller';
 
@@ -27,6 +28,10 @@ export default class Server {
     await configureDatabaseConnection();
 
     // Middlewares
+    this.app.use(
+      jwt({ secret: 'fcfe7f47-193e-41d8-814d-3c5985ee2832' }).unless({ path: [/^\/user/] }),
+    );
+
     this.app.use(cors());
     this.app.use(logger());
     this.app.use(bodyParser());
