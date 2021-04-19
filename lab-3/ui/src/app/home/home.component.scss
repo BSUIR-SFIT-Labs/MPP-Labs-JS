@@ -71,6 +71,21 @@ label {
   border-color: #007bff;
 }
 
+.user-info {
+  float: right;
+  margin: 9.5px 0;
+}
+
+.logout {
+  margin-left: 1rem;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  text-decoration: none;
+  cursor: pointer;
+  color: #007bff;
+}
+
 #no-todo-label {
   display: table;
 }

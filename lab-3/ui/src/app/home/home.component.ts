@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TodoItem } from '../shared/models/todoItem.model';
+import { IdentityService } from '../shared/services/identity.service';
 import { TodoService } from '../shared/services/todo.service';
 
 @Component({
@@ -10,8 +11,12 @@ import { TodoService } from '../shared/services/todo.service';
 export class HomeComponent implements OnInit {
   todoItems: TodoItem[] = [];
   todoInput: string = '';
+  userEmail: string = '1';
 
-  constructor(private todoService: TodoService) {}
+  constructor(
+    private todoService: TodoService,
+    private identityService: IdentityService
+  ) {}
 
   ngOnInit(): void {
     this.todoService.refreshNeeded$.subscribe(() => {
@@ -43,5 +48,9 @@ export class HomeComponent implements OnInit {
 
   deleteTodoItem(todoItemId: number) {
     this.todoService.deleteTodoItem(todoItemId);
+  }
+
+  logOut() {
+    this.identityService.logOut();
   }
 }

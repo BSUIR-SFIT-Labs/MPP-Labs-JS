@@ -30,7 +30,6 @@ export class IdentityService {
   signIn(values: IdentityDto): Observable<boolean> {
     return this.httpClient.post(this.baseUrl + '/login', values).pipe(
       tap((user: User) => {
-        console.log(user);
         if (user) {
           localStorage.setItem('token', user.token);
           this.currentUserSource.next(user);
@@ -46,7 +45,7 @@ export class IdentityService {
   logOut(): void {
     localStorage.removeItem('token');
     this.currentUserSource.next(null);
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/sign-in');
   }
 
   isLoggedIn(): boolean {

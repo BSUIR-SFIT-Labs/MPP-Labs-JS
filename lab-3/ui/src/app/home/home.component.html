@@ -1,3 +1,16 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <div class="col-10 mx-auto">
+      <a class="navbar-brand">Todo</a>
+      <div class="user-info" *ngIf="userEmail">
+        <span
+          >Welcome, <strong>{{ userEmail }}</strong></span
+        >
+        <button class="logout" (click)="logOut()">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
 <div class="container">
   <div class="input-group col-10 mx-auto mt-5">
     <input
