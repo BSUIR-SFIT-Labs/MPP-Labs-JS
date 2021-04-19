@@ -9,6 +9,8 @@ import { HomeComponent } from './home/home.component';
 import { FormsModule } from '@angular/forms';
 import { ModalContent } from './modal/modal.component';
 import { ModalLabelComponent } from './modal-label/modal-label.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
+import { SignInComponent } from './sign-in/sign-in.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +18,8 @@ import { ModalLabelComponent } from './modal-label/modal-label.component';
     HomeComponent,
     ModalContent,
     ModalLabelComponent,
+    SignUpComponent,
+    SignInComponent,
   ],
   imports: [
     BrowserModule,
