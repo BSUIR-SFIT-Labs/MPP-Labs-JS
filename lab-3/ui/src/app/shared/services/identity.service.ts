@@ -12,14 +12,14 @@ import { User } from '../models/user';
   providedIn: 'root',
 })
 export class IdentityService {
-  private readonly baseUrl: string = 'http://localhost:3000/user';
+  private readonly baseUrl: string = 'http://localhost:3000';
   private currentUserSource = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSource.asObservable();
 
   constructor(private httpClient: HttpClient, private router: Router) {}
 
   signUp(values: IdentityDto): Observable<boolean> {
-    return this.httpClient.post(this.baseUrl + '/create', values).pipe(
+    return this.httpClient.post(this.baseUrl + 'user/create', values).pipe(
       mapTo(true),
       catchError(() => {
         return of(false);
@@ -28,7 +28,7 @@ export class IdentityService {
   }
 
   signIn(values: IdentityDto): Observable<boolean> {
-    return this.httpClient.post(this.baseUrl + '/login', values).pipe(
+    return this.httpClient.post(this.baseUrl + '/user/login', values).pipe(
       tap((user: User) => {
         if (user) {
           localStorage.setItem('token', user.token);
@@ -42,8 +42,24 @@ export class IdentityService {
     );
   }
 
+  getEmail(): Observable<boolean> {
+    return this.httpClient.get(this.baseUrl + '/current-user').pipe(
+      tap((user: User) => {
+        if (user) {
+          localStorage.setItem('email', user.email);
+          this.currentUserSource.next(user);
+        }
+      }),
+      mapTo(true),
+      catchError(() => {
+        return of(false);
+      })
+    );
+  }
+
   logOut(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('email');
     this.currentUserSource.next(null);
     this.router.navigateByUrl('/sign-in');
   }

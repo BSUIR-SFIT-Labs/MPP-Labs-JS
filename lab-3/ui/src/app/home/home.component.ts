@@ -11,7 +11,7 @@ import { TodoService } from '../shared/services/todo.service';
 export class HomeComponent implements OnInit {
   todoItems: TodoItem[] = [];
   todoInput: string = '';
-  userEmail: string = '1';
+  userEmail: string;
 
   constructor(
     private todoService: TodoService,
@@ -24,6 +24,10 @@ export class HomeComponent implements OnInit {
     });
 
     this.getAllTodoItems();
+
+    this.identityService.getEmail().subscribe(() => {
+      this.userEmail = localStorage.getItem('email');
+    });
   }
 
   getAllTodoItems(

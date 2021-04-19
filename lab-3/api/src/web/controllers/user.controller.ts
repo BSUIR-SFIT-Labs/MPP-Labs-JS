@@ -1,20 +1,24 @@
 import { Context } from 'koa';
 import BaseController from './base.controller';
 import UserService from '../../common/services/userService';
+import TokenService from '../../common/services/tokenService';
 
 class UserController extends BaseController {
   private readonly userService: UserService;
+  private readonly tokenService: TokenService;
 
   constructor() {
     super();
     this.InitializeRoutes();
 
     this.userService = new UserService();
+    this.tokenService = new TokenService();
   }
 
   private InitializeRoutes() {
     this.router.post('/user/create', this.createUser);
     this.router.post('/user/login', this.login);
+    this.router.get('/current-user', this.getUserEmail);
   }
 
   createUser = async (context: Context): Promise<void> => {
@@ -50,6 +54,20 @@ class UserController extends BaseController {
         context.status = 401;
         context.body = { 'message: ': 'email or password incorrect!' };
       }
+    } catch {
+      context.status = 500;
+      context.body = '';
+    }
+  };
+
+  getUserEmail = async (context: Context): Promise<void> => {
+    try {
+      const currentUserEmail = this.tokenService.getCurrentUserEmail(
+        context.headers.authorization.split(' ')[1],
+      );
+
+      context.status = 200;
+      context.body = { email: currentUserEmail };
     } catch {
       context.status = 500;
       context.body = '';
