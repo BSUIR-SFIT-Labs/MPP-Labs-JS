@@ -4,25 +4,38 @@ import * as path from 'path';
 import { Attachment } from '../models/entities/attachment';
 import { TodoItem } from '../models/entities/todoItem';
 import TodoItemRequestDto from '../models/requests/todoItemRequestDto';
+import UserService from './userService';
 
 export default class TodoService {
+  private readonly userService: UserService;
+
+  constructor() {
+    this.userService = new UserService();
+  }
+
   public async getAllTodoItems(
+    userId: number,
     sortingElement: string = 'DUE_DATE',
     sortOrder: string = 'ASC',
   ): Promise<TodoItem[]> {
+    const currentUser = await this.userService.getUserById(userId);
     const todoItems = await getConnection()
       .getRepository(TodoItem)
-      .find({ relations: ['attachments'] });
+      .find({ where: { user: currentUser }, relations: ['attachments'] });
 
     return this.sortTodoItems(sortingElement, sortOrder, todoItems);
   }
 
-  public async createNewTodoItem(todoItemRequestDto: TodoItemRequestDto): Promise<void> {
+  public async createNewTodoItem(
+    userId: number,
+    todoItemRequestDto: TodoItemRequestDto,
+  ): Promise<void> {
     const todoItem = new TodoItem();
     todoItem.title = todoItemRequestDto.title;
     todoItem.description = todoItemRequestDto.description;
     todoItem.dueDate = todoItemRequestDto.dueDate;
     todoItem.isDone = false;
+    todoItem.user = await this.userService.getUserById(userId);
 
     await getConnection().manager.save(todoItem);
 
@@ -38,6 +51,7 @@ export default class TodoService {
   }
 
   public async updateTodoItem(
+    userId: number,
     id: number,
     title: string,
     description: string,
@@ -51,7 +65,7 @@ export default class TodoService {
       .execute();
   }
 
-  public async deleteTodoItem(id: number): Promise<void> {
+  public async deleteTodoItem(userId: number, id: number): Promise<void> {
     const attachmentsToDelete = await getConnection()
       .getRepository(Attachment)
       .createQueryBuilder('attachments')
@@ -65,14 +79,20 @@ export default class TodoService {
 
     this.deleteFiles(filenames);
 
-    await getConnection().getRepository(TodoItem).delete(id);
+    await getConnection()
+      .getRepository(TodoItem)
+      .createQueryBuilder('todo_items')
+      .where('id = :id', { id: id })
+      .andWhere('userId = :userId', { userId: userId })
+      .delete();
   }
 
-  public async changeTodoItemStatus(id: number): Promise<void> {
+  public async changeTodoItemStatus(userId: number, id: number): Promise<void> {
     const todoItem = await getConnection()
       .getRepository(TodoItem)
       .createQueryBuilder('todo_items')
       .where('todo_items.id = :id', { id: id })
+      .andWhere('userId = :userId', { userId: userId })
       .getOne();
 
     await getConnection()
@@ -80,6 +100,7 @@ export default class TodoService {
       .update(TodoItem)
       .set({ isDone: !todoItem.isDone })
       .where('id = :id', { id: id })
+      .andWhere('userId = :userId', { userId: userId })
       .execute();
   }
 
@@ -91,11 +112,16 @@ export default class TodoService {
       .getMany();
   }
 
-  public async addAttachment(todoItemId: number, pathToAttachment: string): Promise<void> {
+  public async addAttachment(
+    userId: number,
+    todoItemId: number,
+    pathToAttachment: string,
+  ): Promise<void> {
     const todoItem = await getConnection()
       .getRepository(TodoItem)
       .createQueryBuilder('todo_items')
       .where('todo_items.id = :id', { id: todoItemId })
+      .andWhere('userId = :userId', { userId: userId })
       .getOne();
 
     const attachment = new Attachment();
@@ -110,11 +136,12 @@ export default class TodoService {
     await this.deleteFiles([fileName]);
   }
 
-  public async isTodoItemExist(id: number): Promise<boolean> {
+  public async isTodoItemExist(userId: number, id: number): Promise<boolean> {
     const todoItem = await getConnection()
       .getRepository(TodoItem)
       .createQueryBuilder('todo_items')
       .where('todo_items.id = :id', { id: id })
+      .andWhere('userId = :userId', { userId: userId })
       .getOne();
 
     if (todoItem == null || todoItem == undefined) {

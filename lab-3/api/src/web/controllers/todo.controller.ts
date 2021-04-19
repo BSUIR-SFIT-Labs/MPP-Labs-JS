@@ -3,15 +3,18 @@ import * as path from 'path';
 import * as koaBody from 'koa-body';
 import TodoService from '../../common/services/todoService';
 import BaseController from './base.controller';
+import TokenService from '../../common/services/tokenService';
 
 class TodoController extends BaseController {
   private readonly todoService: TodoService;
+  private readonly tokenService: TokenService;
 
   constructor() {
     super();
     this.InitializeRoutes();
 
     this.todoService = new TodoService();
+    this.tokenService = new TokenService();
   }
 
   private InitializeRoutes() {
@@ -47,7 +50,11 @@ class TodoController extends BaseController {
           ? 'ASC'
           : context.request.query.sortingOrder.toString();
 
-      const todoItems = await this.todoService.getAllTodoItems(sortingElement, sortingOrder);
+      const todoItems = await this.todoService.getAllTodoItems(
+        this.getCurrentUserId(context),
+        sortingElement,
+        sortingOrder,
+      );
 
       context.status = 200;
       context.body = todoItems;
@@ -59,7 +66,7 @@ class TodoController extends BaseController {
 
   createTodoItem = async (context: Context): Promise<void> => {
     try {
-      await this.todoService.createNewTodoItem({
+      await this.todoService.createNewTodoItem(this.getCurrentUserId(context), {
         title: context.request.body.title,
       });
       context.status = 200;
@@ -72,8 +79,11 @@ class TodoController extends BaseController {
 
   updateTodoItem = async (context: Context): Promise<void> => {
     try {
-      if (await this.todoService.isTodoItemExist(context.params.id)) {
+      if (
+        await this.todoService.isTodoItemExist(this.getCurrentUserId(context), context.params.id)
+      ) {
         await this.todoService.updateTodoItem(
+          this.getCurrentUserId(context),
           context.params.id,
           context.request.body.title,
           context.request.body.description,
@@ -93,8 +103,10 @@ class TodoController extends BaseController {
 
   deleteTodoItem = async (context: Context): Promise<void> => {
     try {
-      if (await this.todoService.isTodoItemExist(context.params.id)) {
-        await this.todoService.deleteTodoItem(context.params.id);
+      if (
+        await this.todoService.isTodoItemExist(this.getCurrentUserId(context), context.params.id)
+      ) {
+        await this.todoService.deleteTodoItem(this.getCurrentUserId(context), context.params.id);
         context.status = 200;
         context.body = '';
       } else {
@@ -109,8 +121,13 @@ class TodoController extends BaseController {
 
   changeTodoItemStatus = async (context: Context): Promise<void> => {
     try {
-      if (await this.todoService.isTodoItemExist(context.params.id)) {
-        await this.todoService.changeTodoItemStatus(context.params.id);
+      if (
+        await this.todoService.isTodoItemExist(this.getCurrentUserId(context), context.params.id)
+      ) {
+        await this.todoService.changeTodoItemStatus(
+          this.getCurrentUserId(context),
+          context.params.id,
+        );
         context.status = 200;
         context.body = '';
       } else {
@@ -136,12 +153,21 @@ class TodoController extends BaseController {
 
   addAttachment = async (context: Context): Promise<void> => {
     try {
-      if (await this.todoService.isTodoItemExist(context.params.todoItemId)) {
+      if (
+        await this.todoService.isTodoItemExist(
+          this.getCurrentUserId(context),
+          context.params.todoItemId,
+        )
+      ) {
         const file: any = context.request.files.file;
         const basename = path.basename(file.path);
         const pathToAttachment = `${context.origin}/uploads/${basename}`;
 
-        await this.todoService.addAttachment(context.params.todoItemId, pathToAttachment);
+        await this.todoService.addAttachment(
+          this.getCurrentUserId(context),
+          context.params.todoItemId,
+          pathToAttachment,
+        );
         context.status = 200;
         context.body = '';
       } else {
@@ -171,6 +197,10 @@ class TodoController extends BaseController {
       context.body = '';
     }
   };
+
+  private getCurrentUserId(context: Context): number {
+    return this.tokenService.getCurrentUserIdFromToken(context.headers.authorization.split(' ')[1]);
+  }
 }
 
 const instance = new TodoController();
