@@ -45,7 +45,7 @@ class UserController extends BaseController {
 
       if (token) {
         context.status = 200;
-        context.body = { 'token: ': token };
+        context.body = { token: token };
       } else {
         context.status = 401;
         context.body = { 'message: ': 'email or password incorrect!' };

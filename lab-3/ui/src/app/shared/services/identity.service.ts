@@ -29,9 +29,10 @@ export class IdentityService {
 
   signIn(values: IdentityDto): Observable<boolean> {
     return this.httpClient.post(this.baseUrl + '/login', values).pipe(
-      tap((user: any) => {
+      tap((user: User) => {
+        console.log(user);
         if (user) {
-          localStorage.setItem('token', user.accessToken);
+          localStorage.setItem('token', user.token);
           this.currentUserSource.next(user);
         }
       }),

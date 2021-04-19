@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <form class="sign-in">
+    <form class="sign-in" [formGroup]="signInForm" (ngSubmit)="onSubmit()">
       <h1 class="sign-in__title">Sign in</h1>
       <div class="form-group">
         <label for="exampleInputEmail1">Email address</label>
@@ -10,6 +10,7 @@
           id="exampleInputEmail1"
           aria-describedby="emailHelp"
           placeholder="Enter email"
+          formControlName="email"
         />
       </div>
       <div class="form-group">
@@ -19,6 +20,7 @@
           class="form-control"
           id="exampleInputPassword1"
           placeholder="Password"
+          formControlName="password"
         />
       </div>
       <button type="submit" class="btn btn-primary">Sign in</button>
