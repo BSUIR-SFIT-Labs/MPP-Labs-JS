@@ -19,7 +19,7 @@ export class IdentityService {
   constructor(private httpClient: HttpClient, private router: Router) {}
 
   signUp(values: IdentityDto): Observable<boolean> {
-    return this.httpClient.post(this.baseUrl + 'user/create', values).pipe(
+    return this.httpClient.post(this.baseUrl + '/user/create', values).pipe(
       mapTo(true),
       catchError(() => {
         return of(false);
