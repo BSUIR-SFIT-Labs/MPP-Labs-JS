@@ -30,7 +30,9 @@ export default class Server {
     // Middlewares
     this.app.use(cors());
     this.app.use(
-      jwt({ secret: 'fcfe7f47-193e-41d8-814d-3c5985ee2832' }).unless({ path: [/^\/user/] }),
+      jwt({ secret: 'fcfe7f47-193e-41d8-814d-3c5985ee2832' }).unless({
+        path: [/^\/user/, /^\/upload*/],
+      }),
     );
     this.app.use(logger());
     this.app.use(bodyParser());
