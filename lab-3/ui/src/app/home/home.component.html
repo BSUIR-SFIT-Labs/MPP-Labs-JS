@@ -1,0 +1,82 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <div class="col-10 mx-auto">
+      <a class="navbar-brand">Todo</a>
+      <div class="user-info" *ngIf="userEmail">
+        <span
+          >Welcome, <strong>{{ userEmail }}</strong></span
+        >
+        <button class="logout" (click)="logOut()">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <div class="input-group col-10 mx-auto mt-5">
+    <input
+      [(ngModel)]="todoInput"
+      type="text"
+      class="form-control rounded-0"
+      placeholder="New task"
+      name="title"
+    />
+    <span
+      ><button class="btn btn-primary rounded-0" (click)="addTodoItem()">
+        Add task
+      </button></span
+    >
+  </div>
+
+  <div class="col-10 mx-auto mt-5" *ngIf="todoItems.length > 0">
+    <div class="card mb-3 width-max">
+      <div class="card-body">
+        <label class="mb-0 mr-2" (click)="getAllTodoItems('DUE_DATE', 'ASC')"
+          >Due date:
+        </label>
+        <i
+          class="fas fa-arrow-up cursor-pointer"
+          (click)="getAllTodoItems('DUE_DATE', 'ASC')"
+        ></i>
+
+        <i
+          class="fas fa-arrow-down cursor-pointer"
+          (click)="getAllTodoItems('DUE_DATE', 'DESC')"
+        ></i>
+        <label class="mb-0 ml-5 mr-2">Status: </label>
+        <i
+          class="fas fa-arrow-up cursor-pointer"
+          (click)="getAllTodoItems('STATUS', 'ASC')"
+        ></i>
+        <i
+          class="fas fa-arrow-down cursor-pointer"
+          (click)="getAllTodoItems('STATUS', 'DESC')"
+        ></i>
+      </div>
+    </div>
+
+    <div class="card mb-3" *ngFor="let todoItem of todoItems">
+      <div class="card-body">
+        <div class="form-check float-left" id="change-status-form">
+          <input
+            type="checkbox"
+            class="form-check-input cursor-pointer"
+            (change)="changeStatus(todoItem.id)"
+            [checked]="todoItem.isDone ? true : false"
+          />
+          <app-modal-label [todoItem]="todoItem"></app-modal-label>
+        </div>
+        <button
+          class="btn-transparent float-right"
+          (click)="deleteTodoItem(todoItem.id)"
+        >
+          <i class="fas fa-trash-alt bucket"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-10 mx-auto mt-5" *ngIf="todoItems.length == 0">
+    <label class="col-form-label to-upper fs-small mx-auto" id="no-todo-label"
+      >No items yet! Add one above!</label
+    >
+  </div>
+</div>
