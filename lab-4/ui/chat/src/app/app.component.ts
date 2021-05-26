@@ -16,10 +16,11 @@ export class AppComponent {
     this.chatService.getNewMessage().subscribe((message: string) => {
       this.messageList.push(message);
     });
+
+    console.log(this.messageList.length);
   }
 
   sendMessage() {
     this.chatService.sendMessage(this.newMessage);
-    this.newMessage = '';
   }
 }

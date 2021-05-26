@@ -1,9 +1,10 @@
 <router-outlet></router-outlet>
 
-<div *ngFor="let message of messageList">
-  <li>
-    {{ message }}
-  </li>
+<div *ngIf="messageList.length > 1">
+  <div class="container" *ngFor="let message of messageList">
+    <p>{{ message }}</p>
+    <span class="time-left">11:05</span>
+  </div>
 </div>
 
 <input
