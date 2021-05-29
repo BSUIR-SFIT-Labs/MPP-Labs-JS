@@ -1,0 +1,16 @@
+<router-outlet></router-outlet>
+
+<div *ngIf="messageList.length > 1">
+  <div class="container" *ngFor="let message of messageList">
+    <p>{{ message }}</p>
+  </div>
+</div>
+
+<input [(ngModel)]="nick" placeholder="Nickname" style="margin-right: 1em" />
+<input
+  [(ngModel)]="newMessage"
+  (keyup)="$event.keyCode == 13 && sendMessage()"
+  placeholder="Message"
+  style="margin-right: 1em"
+/>
+<button (click)="sendMessage()">Send Message</button>
