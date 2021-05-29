@@ -8,6 +8,7 @@ import { ChatService } from './services/chat.service';
 })
 export class AppComponent {
   newMessage: string;
+  nick: string;
   messageList: string[] = [];
 
   constructor(private chatService: ChatService) {}
@@ -21,6 +22,6 @@ export class AppComponent {
   }
 
   sendMessage() {
-    this.chatService.sendMessage(this.newMessage);
+    this.chatService.sendMessage(this.nick + ': ' + this.newMessage);
   }
 }
